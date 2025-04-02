@@ -14,8 +14,8 @@ public class RoomVariantManager : MonoBehaviour{
     }
 
     [SerializeField] private GameObject[] projectionPlanesSet; // RoomVariant enum: floor: [0],  ceiling: [1], side: [2]
-    private RoomVariant roomVariant = RoomVariant.floor; 
-    
+    private RoomVariant roomVariant = RoomVariant.floor;
+
     private void OnEnable(){
         StimulusSequenceManager.action_sceneChangeRoomVariant += setRoomVariant;
     }

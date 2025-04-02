@@ -2,16 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LinesRotation : MonoBehaviour
+public class LinesControl : MonoBehaviour
 {
     public enum LinesSet{ //probably should be also used in the StimulusSequnceManager
-        roomLines = 0,
-        ansLines = 1
+        noLinesRotation = 0,
+        stimulusLines = 1,
+        ansLines = 2
     }
 
-    [SerializeField] public GameObject RoomLineL, RoomLineR; 
-    [SerializeField] public GameObject AnsLineL, AnsLineR;    
-    private GameObject StimL, StimR;    
+    [SerializeField] private GameObject StimulusLineL, StimulusLineR; 
+    [SerializeField] private GameObject AnsLineL, AnsLineR;
+    [SerializeField] private GameObject AnsLineStand;
+    private GameObject RotatedLineL, RotatedLineR;    
     private LinesSet linesSet;
     
     float rotationSpeed = 2.0f;
@@ -39,7 +41,7 @@ public class LinesRotation : MonoBehaviour
         if (rotationDirection == 0){
             return;
         }
-        currRotation = StimL.transform.localEulerAngles[1]; 
+        currRotation = RotatedLineL.transform.localEulerAngles[1]; 
         if (currRotation > 180.0f){
             currRotation = currRotation - 360.0f;
         }
@@ -48,15 +50,16 @@ public class LinesRotation : MonoBehaviour
             rotationDirection = 0;
             return;
         }
-        if(CamerasManager.instance.currCam != CamerasManager.CameraView.stimuli && linesSet == LinesSet.roomLines){
+        
+        if (CamerasManager.instance.currCam != CamerasManager.CameraView.stimuli && linesSet == LinesSet.stimulusLines){
             rotationDirection = 0;
         }
         if(CamerasManager.instance.currCam != CamerasManager.CameraView.ansRoom && linesSet == LinesSet.ansLines){
             rotationDirection = 0;
         }
         else{
-            StimL.transform.Rotate(Vector3.up * rotationSpeed * rotationDirection * Time.deltaTime);
-            StimR.transform.Rotate(Vector3.up * rotationSpeed * -rotationDirection * Time.deltaTime);
+            RotatedLineL.transform.Rotate(Vector3.up * rotationSpeed * rotationDirection * Time.deltaTime);
+            RotatedLineR.transform.Rotate(Vector3.up * rotationSpeed * -rotationDirection * Time.deltaTime);
         }
     }
 
@@ -67,46 +70,56 @@ public class LinesRotation : MonoBehaviour
         else if(triggerLeftValue > triggerThreshold){
             rotationDirection = 1;
         }
-        if (triggerRightValue < triggerThreshold && rotationDirection == -1 || triggerLeftValue < triggerThreshold && rotationDirection == 1){
+        if ((triggerRightValue < triggerThreshold && rotationDirection == -1 || triggerLeftValue < triggerThreshold && rotationDirection == 1) || linesSet == LinesSet.noLinesRotation)
+        {
             rotationDirection = 0;
         }
     }
 
-    void nextScene(float newAngle){
-        setAngle(newAngle);
+    void setLinesSet(LinesSet newlinesSet){
+        linesSet = newlinesSet;
+        if (newlinesSet == LinesSet.stimulusLines)
+        {
+            RotatedLineL = StimulusLineL;
+            RotatedLineR = StimulusLineR;
+            AnsLineStand.SetActive(false);
+        }
+        else if (newlinesSet == LinesSet.ansLines)
+        {
+            RotatedLineL = AnsLineL;
+            RotatedLineR = AnsLineR;
+        }
     }
 
     void setAngle(float newAngle){
-        if(StimL == null || StimR == null){
-            Debug.LogWarning("LinesSet not chosen in the GUI, assigned the Room lines");
-            setLinesSet(LinesSet.roomLines);
+        if (RotatedLineL == null || RotatedLineR == null){
+            StimulusLineL.transform.localEulerAngles = new Vector3(0.0f, newAngle, 0.0f);
+            StimulusLineR.transform.localEulerAngles = new Vector3(0.0f, -newAngle, 0.0f);
+            setLinesSet(LinesSet.noLinesRotation);
         }
-        StimL.transform.localEulerAngles = new Vector3(0.0f,  newAngle, 0.0f);
-        StimR.transform.localEulerAngles = new Vector3(0.0f, -newAngle, 0.0f);
+        else{
+            RotatedLineL.transform.localEulerAngles = new Vector3(0.0f, newAngle, 0.0f);
+            RotatedLineR.transform.localEulerAngles = new Vector3(0.0f, -newAngle, 0.0f);
+        }
     }
 
     float getAngle(){
-        currRotation = StimL.transform.localEulerAngles[1]; 
+        if (RotatedLineL == null || RotatedLineR == null){
+            return -9999999999.0f;
+        }
+        currRotation = RotatedLineL.transform.localEulerAngles[1]; 
         if (currRotation > 180.0f){
             currRotation = currRotation - 360.0f;
         }
         return currRotation;
     }
-
-    void setLinesSet(LinesSet newlinesSet){
-        linesSet = newlinesSet;
-        if(newlinesSet == LinesSet.roomLines){
-            StimL = RoomLineL;
-            StimR = RoomLineR;
-        }
-        else if (newlinesSet == LinesSet.ansLines){
-            StimL = AnsLineL;
-            StimR = AnsLineR;
-        }
+    void nextScene(float newAngle)
+    {
+        setAngle(newAngle);
     }
-    
+
     void printAngle(){
-        currRotation = StimL.transform.localEulerAngles[1]; 
+        currRotation = RotatedLineL.transform.localEulerAngles[1]; 
         if (currRotation > 180.0f){
             currRotation = currRotation - 360.0f;
         }

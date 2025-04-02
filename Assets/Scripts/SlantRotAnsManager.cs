@@ -80,11 +80,18 @@ public class SlantRotAnsManager : MonoBehaviour{
     }
 
     void setAngle(float newAngle){
-        currSlantBoardsPivot.transform.localEulerAngles = new Vector3(newAngle,90.0f,0.0f); //edits pitch
+        if (currSlantBoardsPivot != null){
+            currSlantBoardsPivot.transform.localEulerAngles = new Vector3(newAngle, 90.0f, 0.0f); //edits pitch
+        }
     }
 
-    float getAngle(){
-        return currSlantBoardsPivot.transform.localEulerAngles[0];
+    float getAngle() {
+        if (currSlantBoardsPivot.transform.localRotation.eulerAngles.y == 270){ //if flipped
+            return 180.0f - currSlantBoardsPivot.transform.localRotation.eulerAngles.x;
+        }
+        else{
+            return currSlantBoardsPivot.transform.localRotation.eulerAngles.x;
+        }
     }
 
     void printAngle(){

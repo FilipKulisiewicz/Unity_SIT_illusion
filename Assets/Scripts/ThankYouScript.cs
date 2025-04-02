@@ -6,7 +6,7 @@ using UnityEngine;
 public class ThankYouScript : MonoBehaviour
 {
     [SerializeField]
-    private GameObject thankYouBoard;
+    private GameObject[] thankYouObjects;
     
     private void OnEnable(){
         StimulusSequenceManager.action_studyEnd += displayThankYou;   
@@ -16,11 +16,16 @@ public class ThankYouScript : MonoBehaviour
         StimulusSequenceManager.action_studyEnd -= displayThankYou;
     }
 
-    void Awake(){
-        thankYouBoard.SetActive(false);
+    void Awake() {
+        foreach (GameObject thankYouObject in thankYouObjects){
+            thankYouObject.SetActive(false);
+        }
     }
 
     void displayThankYou(float temp){
-        thankYouBoard.SetActive(true);
+        foreach (GameObject thankYouObject in thankYouObjects)
+        {
+            thankYouObject.SetActive(true);
+        }
     }
 }

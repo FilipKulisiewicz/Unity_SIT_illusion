@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8af89349cbc730e4388c4c2acdd18d60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  participantsDataFolder: D:\Unity_proj_filip\ParticipantData
+  participantsDataFolder: .\ParticipantData
 --- !u!1 &895915356
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,10 +560,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   participantID: 
-  pathToCSVVariantFile: D:\Unity_proj_filip\VariantSheet\SequenceShort.csv
+  pathToCSVVariantFile: .\VariantSheet\SequenceShort.csv
   selectedEyeOption: 0
   selectedLinesSetOption: 0
-  selectedRoomVariantOption: 2
+  selectedRoomVariantOption: 0
   tutorialCamera: {fileID: 1478677984}
 --- !u!1 &1873805261
 GameObject:

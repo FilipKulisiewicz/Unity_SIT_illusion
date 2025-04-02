@@ -24,8 +24,8 @@ public class LogToFile : MonoBehaviour
             Debug.LogError("Base path is not set!");
             return;
         }     
-        txtPath = participantsDataFolder + "\\" + Menu.instance.getParticipantID() + ".txt";
-        csvPath = participantsDataFolder + "\\" + Menu.instance.getParticipantID() + ".csv";
+        txtPath = participantsDataFolder + "\\" + Menu.instance.getParticipantID() + "_" + Menu.instance.getLinesSet() + ".txt";
+        csvPath = participantsDataFolder + "\\" + Menu.instance.getParticipantID() + "_" + Menu.instance.getLinesSet() + ".csv";
         Directory.CreateDirectory(Path.GetDirectoryName(txtPath)); // Ensure the directory exists
     }
 
@@ -51,7 +51,7 @@ public class LogToFile : MonoBehaviour
                 using (StreamWriter csvWriter = new StreamWriter(csvPath, true)){
                     string participantID = Menu.instance.getParticipantID();
                     csvWriter.WriteLine($"Participant ID:,{participantID},,,,");
-                    csvWriter.WriteLine($"Dominant Eye:,{Menu.instance.selectedEyeOption},Room Variant:,{Menu.instance.selectedRoomVariantOption},selectedLinesOption:,{Menu.instance.selectedLinesSetOption}");
+                    csvWriter.WriteLine($"Dominant Eye:,{Menu.instance.getEyeDominance()},selectedLinesOption:,{Menu.instance.getLinesSet()}");
                     csvWriter.WriteLine("Loading scene,Eye,FOV,Stim_r_0,Answer_Stim_deg,Answer_Slant_deg");
                 }
                 firstWrite = false;
